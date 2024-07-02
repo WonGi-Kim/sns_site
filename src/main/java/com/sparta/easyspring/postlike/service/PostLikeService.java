@@ -26,17 +26,17 @@ public class PostLikeService {
         User user = userService.findUserById(userId);
         Post post = postService.findPostbyId(postId);
 
-        if (postLikeRepository.findByUserAndPost(user, post) != null) {
+        if (postLikeRepository.findPostLikeByUserAndPost(user, post).isPresent()) {
             throw new CustomException(DUPLICATE_LIKE);
         }
-        if (post.getUser().getId() == userId) {
+        if (post.getUser().getId().equals(userId)) {
             throw new CustomException(CANNOT_LIKE_OWN_CONTENT);
         }
 
         PostLike postLike = new PostLike(user, post);
         postLikeRepository.save(postLike);
 
-        postService.increaseLikes(postId);
+        post.updatePostLikes(postLikeRepository.countPostLike(postId));
 
         return "게시글 좋아요 완료";
     }
@@ -46,15 +46,13 @@ public class PostLikeService {
         User user = userService.findUserById(userId);
         Post post = postService.findPostbyId(postId);
 
-        PostLike postLike = postLikeRepository.findByUserAndPost(user, post);
-
-        if (postLike == null) {
+        if (!postLikeRepository.findPostLikeByUserAndPost(user, post).isPresent()) {
             throw new CustomException(LIKE_NOT_FOUND);
         }
 
-        postLikeRepository.delete(postLike);
+        postLikeRepository.deletePostLike(user, post);
 
-        postService.decreaseLikes(postId);
+        post.updatePostLikes(postLikeRepository.countPostLike(postId));
 
         return "게시글 좋아요 해제 완료";
     }

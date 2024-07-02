@@ -29,6 +29,5 @@ public class PostLike extends TimeStamp {
     public PostLike(User user, Post post) {
         this.user = user;
         this.post = post;
-        post.setPostLike(this);
     }
 }

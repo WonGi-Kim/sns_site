@@ -84,18 +84,6 @@ public class PostService {
         return followPostList;
     }
 
-    @Transactional
-    public void increaseLikes(Long postId){
-        Post post = findPostbyId(postId);
-        post.increaseLikes();
-    }
-
-    @Transactional
-    public void decreaseLikes(Long postId){
-        Post post = findPostbyId(postId);
-        post.decreaseLikes();
-    }
-
     public Post findPostbyId(Long postId){
         Post post = postRepository.findById(postId).orElseThrow(
                 ()->new CustomException(POST_NOT_FOUND)

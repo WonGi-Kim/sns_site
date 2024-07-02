@@ -57,9 +57,9 @@ public class Post extends TimeStamp {
         this.contents= requestDto.getContents();
     }
 
-    public void setPostLike(PostLike postLike) {
-        this.postLikeList.add(postLike);
-    }
+//    public void setPostLike(PostLike postLike) {
+//        this.postLikeList.add(postLike);
+//    }
 
     // 어드민 글 생성시 필요한 생성자
     public Post(PostWithStatusRequestDto requestDto, User user, UserRoleEnum roleEnum){
@@ -71,12 +71,8 @@ public class Post extends TimeStamp {
         }
     }
 
-    public void increaseLikes() {
-        this.likes++;
-    }
-
-    public void decreaseLikes() {
-        this.likes--;
+    public void updatePostLikes(Long postLikes) {
+        this.likes = postLikes;
     }
 
     public void makeNoticePost(boolean isNotice) {
