@@ -6,11 +6,11 @@ import com.sparta.easyspring.commentlike.entity.CommentLike;
 import com.sparta.easyspring.post.entity.Post;
 import com.sparta.easyspring.timestamp.TimeStamp;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "comment")
@@ -53,10 +53,7 @@ public class Comment extends TimeStamp {
         this.comment = requestDto.getComment() + " (Admin에 의해 수정되었음)";
     }
 
-    public void increaseLikes() {
-        this.likes += 1L;
-    }
-    public void decreaseLikes() {
-        this.likes -= 1L;
+    public void updateCommentLike(Long likes) {
+        this.likes = likes;
     }
 }

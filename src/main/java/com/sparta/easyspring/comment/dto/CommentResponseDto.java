@@ -1,5 +1,6 @@
 package com.sparta.easyspring.comment.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
 import com.sparta.easyspring.comment.entity.Comment;
 import lombok.Getter;
 
@@ -16,6 +17,7 @@ public class CommentResponseDto {
     private LocalDateTime modifiedAt;
 
 
+    @QueryProjection
     public CommentResponseDto(Long id, String comment, Long likes, Long userId, Long postId, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
         this.comment = comment;

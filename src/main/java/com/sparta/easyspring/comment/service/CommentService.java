@@ -82,16 +82,4 @@ public class CommentService {
         );
         return comment;
     }
-
-    @Transactional
-    public void increaseLikes(Long commentId){
-        Comment comment = findCommentbyId(commentId);
-        comment.increaseLikes();
-    }
-
-    @Transactional
-    public void decreaseLikes(Long commentId){
-        Comment comment = findCommentbyId(commentId);
-        comment.decreaseLikes();
-    }
 }

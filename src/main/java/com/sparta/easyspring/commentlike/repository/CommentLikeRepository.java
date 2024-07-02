@@ -2,13 +2,10 @@
 package com.sparta.easyspring.commentlike.repository;
 
 
-import com.sparta.easyspring.auth.entity.User;
-import com.sparta.easyspring.comment.entity.Comment;
 import com.sparta.easyspring.commentlike.entity.CommentLike;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
-import java.util.Optional;
-
-public interface CommentLikeRepository extends JpaRepository<CommentLike,Long> {
-    Optional<CommentLike> findByUserAndComment(User user, Comment comment);
+public interface CommentLikeRepository extends JpaRepository<CommentLike,Long>, QuerydslPredicateExecutor<CommentLike>, CommentLikeRepositoryCustom {
+    //Optional<CommentLike> findByUserAndComment(User user, Comment comment);
 }
