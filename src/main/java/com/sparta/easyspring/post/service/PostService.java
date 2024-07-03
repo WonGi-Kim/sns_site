@@ -9,13 +9,13 @@ import com.sparta.easyspring.post.dto.PostRequestDto;
 import com.sparta.easyspring.post.dto.PostResponseDto;
 import com.sparta.easyspring.post.entity.Post;
 import com.sparta.easyspring.post.repository.PostRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -89,5 +89,18 @@ public class PostService {
                 ()->new CustomException(POST_NOT_FOUND)
         );
         return post;
+    }
+
+    @Transactional
+    public List<PostResponseDto> getAllLikePost(Long userId, int page, int size) {
+        User user = userService.findUserById(userId);
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Post> likePostPage = postRepository.findAllLikePost(user, pageable);
+
+        return likePostPage.stream()
+                .map(PostResponseDto::new)
+                .collect(Collectors.toList());
     }
 }

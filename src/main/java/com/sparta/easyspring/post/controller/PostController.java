@@ -5,6 +5,9 @@ import com.sparta.easyspring.post.dto.PostRequestDto;
 import com.sparta.easyspring.post.dto.PostResponseDto;
 import com.sparta.easyspring.post.service.PostService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -62,5 +65,13 @@ public class PostController {
                                                                   @RequestParam(value = "sortBy",defaultValue = "createdAt") String sortBy){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(postService.getAllFollowPost(followingId,userDetails.getUser(),page-1,sortBy));
+    }
+
+    @GetMapping("/likeposts")
+    public ResponseEntity<List<PostResponseDto>> getAllLikePost(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                                @RequestParam(value = "page",defaultValue = "1") int page,
+                                                                @RequestParam(value = "size",defaultValue = "5") int size) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(postService.getAllLikePost(userDetails.getUser().getId(),page - 1, size));
     }
 }
