@@ -41,4 +41,24 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom{
 
         return new PageImpl<>(postList, pageable, countQuery.fetchOne());
     }
+
+    @Override
+    public Page<Post> findAllPostByFollowings(List<Long> followings, Pageable pageable) {
+        QPost post = QPost.post;
+
+        List<Post> posts = queryFactory
+                .selectFrom(post)
+                .where(post.user.id.in(followings))
+                .orderBy(post.createdAt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Long> countQuery = queryFactory
+                .select(post.count())
+                .from(post)
+                .where(post.user.id.in(followings));
+
+        return new PageImpl<>(posts, pageable, countQuery.fetchOne());
+    }
 }

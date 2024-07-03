@@ -74,4 +74,12 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(postService.getAllLikePost(userDetails.getUser().getId(),page - 1, size));
     }
+
+    @GetMapping("/following")
+    public ResponseEntity<List<PostResponseDto>> getFollowingPost(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                                  @RequestParam(value = "page",defaultValue = "1") int page,
+                                                                  @RequestParam(value = "size",defaultValue = "5") int size) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(postService.getFollowingPost(userDetails.getUser().getId(),page - 1, size));
+    }
 }

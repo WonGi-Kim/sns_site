@@ -3,7 +3,9 @@ package com.sparta.easyspring.post.service;
 import com.sparta.easyspring.auth.entity.User;
 import com.sparta.easyspring.auth.service.UserService;
 import com.sparta.easyspring.exception.CustomException;
+import com.sparta.easyspring.exception.GlobalExceptionHandler;
 import com.sparta.easyspring.follow.entity.Follow;
+import com.sparta.easyspring.follow.repository.FollowRepository;
 import com.sparta.easyspring.follow.service.FollowService;
 import com.sparta.easyspring.post.dto.PostRequestDto;
 import com.sparta.easyspring.post.dto.PostResponseDto;
@@ -11,12 +13,10 @@ import com.sparta.easyspring.post.entity.Post;
 import com.sparta.easyspring.post.repository.PostRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +28,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserService userService;
     private final FollowService followService;
+    private final FollowRepository followRepository;
 
     public PostResponseDto addPost(PostRequestDto requestDto, User user) {
         Post post = new Post(requestDto,user);
@@ -100,6 +101,25 @@ public class PostService {
         Page<Post> likePostPage = postRepository.findAllLikePost(user, pageable);
 
         return likePostPage.stream()
+                .map(PostResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    //  팔로잉 게시글 목록 조회 기능
+    public List<PostResponseDto> getFollowingPost(Long userId, int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        User user = userService.findUserById(userId);
+
+        List<Long> followings = followRepository.findAllFollowingByUser(user);
+
+        if(followings.isEmpty()) {
+            throw new CustomException(ALREADY_FOLLOW);
+        }
+
+        Page<Post> followingsPost = postRepository.findAllPostByFollowings(followings, pageable);
+
+        return followingsPost.stream()
                 .map(PostResponseDto::new)
                 .collect(Collectors.toList());
     }
