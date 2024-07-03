@@ -1,8 +1,10 @@
 package com.sparta.easyspring.comment.controller;
 
+import com.sparta.easyspring.auth.security.UserDetailsImpl;
 import com.sparta.easyspring.comment.dto.CommentRequestDto;
 import com.sparta.easyspring.comment.dto.CommentResponseDto;
 import com.sparta.easyspring.comment.service.CommentService;
+import com.sparta.easyspring.post.dto.PostResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +39,14 @@ public class CommentController {
     public ResponseEntity<String> deleteComment(@PathVariable Long commentId) {
         commentService.deleteExistingComment(commentId);
         return ResponseEntity.ok().body("댓글 삭제에 성공했습니다.");
+    }
+
+    @GetMapping("/likecomments")
+    public ResponseEntity<List<CommentResponseDto>> getAllLikePost(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                                @RequestParam(value = "page",defaultValue = "1") int page,
+                                                                @RequestParam(value = "size",defaultValue = "5") int size) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(commentService.getAllLikeComment(userDetails.getUser().getId(),page - 1, size));
     }
 
 }
