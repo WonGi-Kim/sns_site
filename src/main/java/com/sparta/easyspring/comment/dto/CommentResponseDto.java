@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 public class CommentResponseDto {
     private Long id;
-    private String comment;
+    private String content;
     private Long likes;
     private Long userId;
     private Long postId;
@@ -18,9 +18,9 @@ public class CommentResponseDto {
 
 
     @QueryProjection
-    public CommentResponseDto(Long id, String comment, Long likes, Long userId, Long postId, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    public CommentResponseDto(Long id, String content, Long likes, Long userId, Long postId, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
-        this.comment = comment;
+        this.content = content;
         this.likes = likes;
         this.userId = userId;
         this.postId = postId;
@@ -30,7 +30,7 @@ public class CommentResponseDto {
 
     public CommentResponseDto(Comment comment) {
         this.id = comment.getId();
-        this.comment = comment.getComment();
+        this.content = comment.getContent();
         this.likes = comment.getLikes();
         this.userId = comment.getUser().getId();
         this.postId = comment.getPost().getId();

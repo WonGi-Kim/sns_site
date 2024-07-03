@@ -30,7 +30,7 @@ public class Comment extends TimeStamp {
     private Post post;
 
     @Column(nullable = false)
-    private String comment;
+    private String content;
 
     @Column(nullable = false)
     private Long likes;
@@ -38,19 +38,19 @@ public class Comment extends TimeStamp {
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommentLike> commentLikes = new ArrayList<>();
 
-    public Comment(User user, Post post, String comment) {
+    public Comment(User user, Post post, String content) {
         this.user = user;
         this.post = post;
-        this.comment = comment;
+        this.content = content;
         this.likes = 0L;
     }
 
     public void editComment(CommentRequestDto requestDto) {
-        this.comment = requestDto.getComment();
+        this.content = requestDto.getContent();
     }
 
     public void editCommentByAdmin(CommentRequestDto requestDto) {
-        this.comment = requestDto.getComment() + " (Admin에 의해 수정되었음)";
+        this.content = requestDto.getContent() + " (Admin에 의해 수정되었음)";
     }
 
     public void updateCommentLike(Long likes) {
