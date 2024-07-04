@@ -18,7 +18,6 @@ import java.util.Optional;
 public class CommentLikeRepositoryCustomImpl implements CommentLikeRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
-    private final EntityManager entityManager; // save 구현 시 필요
 
     @Override
     public Optional<CommentLike> findByUserAndComment(User user, Comment comment) {
