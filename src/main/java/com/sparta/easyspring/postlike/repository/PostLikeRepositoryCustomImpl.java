@@ -2,8 +2,6 @@ package com.sparta.easyspring.postlike.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.easyspring.auth.entity.User;
-import com.sparta.easyspring.comment.entity.Comment;
-import com.sparta.easyspring.commentlike.entity.QCommentLike;
 import com.sparta.easyspring.post.entity.Post;
 import com.sparta.easyspring.postlike.entity.PostLike;
 import com.sparta.easyspring.postlike.entity.QPostLike;

@@ -9,5 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 public interface PostLikeRepository extends JpaRepository<PostLike, Long>, QuerydslPredicateExecutor<PostLike>, PostLikeRepositoryCustom {
-    //PostLike findByUserAndPost(User user, Post post);
+    PostLike findByUserAndPost(User user, Post post);
 }
