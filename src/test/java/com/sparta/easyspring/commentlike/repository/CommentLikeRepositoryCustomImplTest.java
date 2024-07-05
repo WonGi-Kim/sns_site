@@ -30,7 +30,7 @@ public class CommentLikeRepositoryCustomImplTest {
     private CommentLikeRepositoryCustomImpl commentLikeRepositoryCustom;
 
     @BeforeEach
-    void setUP() {
+    void setUp() {
         commentLikeRepositoryCustom = new CommentLikeRepositoryCustomImpl(queryFactory);
     }
 
