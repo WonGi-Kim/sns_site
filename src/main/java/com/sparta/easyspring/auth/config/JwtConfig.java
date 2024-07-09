@@ -14,5 +14,6 @@ public class JwtConfig {
     @Value("${jwt.token.expiration}")
     private long tokenExpiration;
 
+    @Value("${jwt.refresh.token.expiration}")
     private long refreshTokenExpiration;
 }

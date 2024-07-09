@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -102,19 +103,18 @@ public class UserService {
         return new ResponseEntity<>(responseDto,headers,HttpStatus.OK);
     }
 
-    public ResponseEntity<AuthResponseDto> logout(UserDetailsImpl userDetails) {
-        String username = userDetails.getUsername();
-        User user = userRepository.findByUsername(username).orElse(null);
-        if (user == null) {
-            throw new CustomException(USER_NOT_FOUND);
+    public String logout(String accessToken) {
+        String token = accessToken.substring(7);
+        if (!jwtUtil.validateToken(token)) {
+            throw new CustomException(TOKEN_INVALID_OR_EXPIRATION);
         }
-
-        user.clearRefreshToken();
-        userRepository.save(user);
-
-        AuthResponseDto responseDto = new AuthResponseDto(user.getId(), user.getUsername());
-
-        return ResponseEntity.ok(responseDto);
+        // Redis에 추가
+        jwtUtil.blacklistToken(token);
+        if (jwtUtil.isTokenBlacklisted(token)) {
+            return "logout 성공";
+        } else {
+            return "logout 실패";
+        }
     }
 
     public ResponseEntity<AuthResponseDto> withdraw(UserDetailsImpl userDetails) {

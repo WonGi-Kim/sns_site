@@ -16,11 +16,13 @@ public class JwtUtil {
     private final long tokenExpiration;
     private final long refreshTokenExpiration;
     private final SecretKey secretKey;
+    private final RedisUtil redisUtil;
 
-    public JwtUtil(JwtConfig jwtConfig) {
+    public JwtUtil(JwtConfig jwtConfig, RedisUtil redisUtil) {
         this.tokenExpiration = jwtConfig.getTokenExpiration();
         this.refreshTokenExpiration = jwtConfig.getRefreshTokenExpiration();
         this.secretKey = Keys.hmacShaKeyFor(jwtConfig.getSecretKey().getBytes());
+        this.redisUtil = redisUtil;
     }
 
     /**
@@ -121,6 +123,38 @@ public class JwtUtil {
     private boolean isTokenExpired(String token) {
         Date expiration = extractClaims(token).getExpiration();
         return expiration.before(new Date());
+    }
+
+    // 블랙리스트에 토큰 추가
+    public void blacklistToken(String token) {
+        long expirationMillis = calculateExpirationMillis();
+        System.out.println("Calculated expiration in milliseconds: " + expirationMillis);
+        String username = getUsernameFromToken(token);
+        redisUtil.setBlackList(token, username, expirationMillis);
+    }
+
+    // 블랙리스트에서 토큰 검증
+    public boolean isTokenBlacklisted(String token) {
+        return redisUtil.hasKeyBlackList(token);
+    }
+
+    // 블랙리스트에서 토큰 제거
+    public void removeTokenFromBlacklist(String token) {
+        redisUtil.deleteBlackList(token);
+    }
+
+    // 유효하지 않은 토큰 예외 처리
+    private void handleInvalidTokenException(Exception e) {
+        throw new IllegalArgumentException("Invalid token: " + e.getMessage());
+    }
+
+    // 만료 시간 계산
+    private long calculateExpirationMillis() {
+        System.out.println("Refresh token expiration (seconds): " + refreshTokenExpiration);
+        if (refreshTokenExpiration <= 0) {
+            throw new IllegalArgumentException("Refresh token expiration must be greater than 0");
+        }
+        return refreshTokenExpiration * 1000; // Convert seconds to milliseconds
     }
 
 }

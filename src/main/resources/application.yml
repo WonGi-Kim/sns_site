@@ -10,6 +10,14 @@ spring:
       ddl-auto: update
     show-sql: true
 
+  cache:
+    type: redis
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
   servlet:
     multipart:
       max-request-size: 30MB
@@ -27,6 +35,7 @@ spring:
             client-id: ${NAVER_CLIENT_ID}
             redirect-uri: http://lostark.shop/api/auth/login/naver
             client-secret: ${NAVER_CLIENT_SECRET}
+
 
 jwt:
   secret:
@@ -52,4 +61,7 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
-
+# 모든 패키지의 로그 레벨을 DEBUG로 설정하는 예
+#logging:
+#  level:
+#    root: debug
